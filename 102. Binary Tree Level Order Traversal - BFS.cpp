@@ -1,3 +1,6 @@
+#include <vector>
+#include <queue>
+
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -10,33 +13,28 @@
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<vector<int>> res;
-        vector<int> level;
-        if(!root) return res;
-        int curLevelCnt = 1, nextLevelCnt = 0, visitedCnt = 0;
+        vector<vector<int>> result;
+        if (!root) return result;
+
         queue<TreeNode*> q;
         q.push(root);
-        while(!q.empty()){
-            TreeNode *cur = q.front();
-            q.pop();
-            visitedCnt++;
-            level.push_back(cur->val);
-            if(cur->left){
-                nextLevelCnt++;
-                q.push(cur->left);
+
+        while (!q.empty()) {
+            int levelSize = q.size();
+            vector<int> levelNodes;
+
+            for (int i = 0; i < levelSize; ++i) {
+                TreeNode* node = q.front();
+                q.pop();
+                levelNodes.push_back(node->val);
+
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
             }
-            if(cur->right){
-                nextLevelCnt++;
-                q.push(cur->right);
-            }
-            if(curLevelCnt == visitedCnt){
-                res.push_back(level);
-                level.clear();
-                curLevelCnt = nextLevelCnt;
-                nextLevelCnt = 0;
-                visitedCnt = 0;
-            }
+
+            result.push_back(levelNodes);
         }
-        return res;
+
+        return result;
     }
 };
